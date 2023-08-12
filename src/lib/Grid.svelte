@@ -5,11 +5,7 @@ import { InstancedMesh, Instance, useTexture } from "@threlte/extras";
 import * as THREE from "three";
 
 import { row, col } from "../utils";
-import {
-    heightMap,
-    resolveMap,
-    currentMapId,
-} from "../stores/stores";
+import { heightMap } from "../stores/stores";
 
 import { base } from "$app/paths";
 
@@ -42,28 +38,6 @@ function horizontalCoords() {
 }
 
 const horizontal = horizontalCoords();
-
-// ### Map ### //
-
-
-$: currentMap = resolveMap($currentMapId);
-
-// ### Dragging vs Clicking behaviour ### //
-
-const mouse = {
-    drag: false,
-    down: () => {
-        mouse.drag = false;
-    },
-    move: () => {
-        mouse.drag = true;
-    },
-    up: (button: number, index: number) => {
-        if (!mouse.drag) {
-            currentMap.updateMap(index, button == 0 ? 1 : -1);
-        }
-    }
-};
 </script>
 
 {#await Promise.all([horizontalTexture, verticalTexture]) then [textureH, textureV]}
@@ -116,15 +90,6 @@ const mouse = {
                 position.x={horizontal[i].x}
                 position.y={$heightMap[row(i)][col(i)] * unitCoefficient}
                 position.z={horizontal[i].z}
-                on:pointermove={() => {
-                    mouse.move();
-                }}
-                on:pointerup={(e) => {
-                    mouse.up(e.nativeEvent.button, i);
-                }}
-                on:pointerdown={() => {
-                    mouse.down();
-                }}
             />
         {/each}
     </InstancedMesh>

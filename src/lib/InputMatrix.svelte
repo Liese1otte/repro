@@ -1,5 +1,5 @@
 <script lang="ts">
-import { resolveMap, currentMapId, heightMap, prefabMap } from '../stores/stores';
+import { resolveMap, currentMapId, heightMap, prefabMap, blankMap } from '../stores/stores';
 import { getMapArraysFromCGPString } from "../patternParsing";
 import { row, col } from "../utils"; 
 
@@ -9,27 +9,28 @@ function swapMaps(): void {
 
 $: currentMap = resolveMap($currentMapId);
 
+// Rest is importing patterns from files:
+
+let currentPatternName: string;
 let patternFileInput: HTMLInputElement;
 
 async function parsePattern(): Promise<void> {
-if (patternFileInput.files == null) {
-    return;
-}
-let [file] = patternFileInput.files;
-if (!file || (file && !file.name.endsWith('.cgp'))) {
-    return;
-}
-currentPatternName = file.name.replace(/\.[^/.]+$/, '');
-setPatternFromCgp(await file.text());
+    if (patternFileInput.files == null) {
+        return;
+    }
+    let [file] = patternFileInput.files;
+    if (!file || (file && !file.name.endsWith('.cgp'))) {
+        return;
+    }
+    currentPatternName = file.name.replace(/\.[^/.]+$/, '');
+    setPatternFromCgp(await file.text());
 }
 
 function setPatternFromCgp(cgp: string): void {
-let [heights, prefabs] = getMapArraysFromCGPString(cgp);
-$heightMap = heights;
-$prefabMap = prefabs;
+    let [heights, prefabs] = getMapArraysFromCGPString(cgp);
+    $heightMap = heights;
+    $prefabMap = prefabs;
 }
-
-let currentPatternName: string;
 </script>
 
 <div class="maps">
@@ -50,7 +51,7 @@ let currentPatternName: string;
                 on:contextmenu={() => {
                     currentMap.updateMap(index, -1);
                 }}
-                >{$currentMap[row(index)] === undefined
+                >{$currentMap[row(index)] == undefined
                     ? 0
                     : $currentMap[row(index)][col(index)]}</button
             >
@@ -66,7 +67,7 @@ let currentPatternName: string;
 <button
     class="height-reset"
     on:click={() => {
-        $currentMap = Array.from(Array(16), () => Array(16).fill(0));
+        $currentMap = blankMap(0);
     }}>Reset Pattern</button
 >
 <input

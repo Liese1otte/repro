@@ -40,6 +40,7 @@ let enemyPrefabConfig: { i: number; j: number; type: number }[];
 $: enemyPrefabConfig = generateEnemyPrefabConfig($prefabMap);
 </script>
 
+<!-- do these as one thing smh -->
 {#await meleePrefabTexture then texture}
     <InstancedMesh>
         <T.PlaneGeometry />
