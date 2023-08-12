@@ -71,12 +71,12 @@ function setPatternFromCgp(cgp: string): void {
     }}>Reset Pattern</button
 >
 <input
-type="file"
-on:change={() => {
-    parsePattern();
-}}
-bind:this={patternFileInput}
-accept=".cgp"
+    type="file"
+    on:change={() => {
+        parsePattern();
+    }}
+    bind:this={patternFileInput}
+    accept=".cgp"
 />
 
 <style lang="less">
