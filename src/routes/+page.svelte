@@ -1,20 +1,47 @@
 <script lang="ts">
-  import App from '$lib/components/App.svelte'
+  import { Canvas } from "@threlte/core";
+
+  import InputMenu from "$lib/InputMenu.svelte";
+  import MainScene from "$lib/MainScene.svelte";
+
+  import { base } from "$app/paths";
 </script>
 
-<div>
-  <App />
+<div class="website">
+  <div class="canvas-container">
+    <Canvas
+      toneMapping={0}
+      colorSpace={"srgb-linear"}
+    >
+      <MainScene />
+    </Canvas>
+  </div>
+  <div class="menu-container">
+    <InputMenu />
+  </div>
 </div>
 
 <style>
-  :global(body) {
-    margin: 0;
+  @import "/src/globals.css";
+
+  div.website {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+
+    width: 100%;
+    height: 100%;
   }
 
-  div {
-    width: 100vw;
-    height: 100vh;
-    background: rgb(13, 19, 32);
-    background: linear-gradient(180deg, rgba(13, 19, 32, 1) 0%, rgba(8, 12, 21, 1) 100%);
+  div.canvas-container {
+    grid-column: 1 / span 2;
+
+    margin: 20px 10px 20px 20px;
+  }
+
+  div.menu-container {
+    grid-column: 3 / span 1;
+
+    margin: 20px 20px 20px 10px;
   }
 </style>
